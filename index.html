@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S1 Review</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* 导航菜单样式 */
+        .nav-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu-toggle {
+            background: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .menu-icon {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: #333;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active .menu-icon:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active .menu-icon:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active .menu-icon:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 20px;
+            min-width: 280px;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .nav-menu.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-section {
+            margin-bottom: 20px;
+        }
+
+        .nav-section-title {
+            font-size: 0.9rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* 内容区域样式 */
+        .content-wrapper {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* iframe样式用于加载其他HTML */
+        .content-frame {
+            width: 100%;
+            min-height: 100vh;
+            border: none;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        /* 首页样式 */
+        .home-section {
+            text-align: center;
+            color: white;
+            padding: 100px 20px;
+        }
+
+        .home-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .home-subtitle {
+            font-size: 1.5rem;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        .home-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .home-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .home-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .home-card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .home-card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .home-card-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-container {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .nav-menu {
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+            }
+            
+            .home-title {
+                font-size: 2.5rem;
+            }
+            
+            .home-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航菜单 -->
+    <div class="nav-container">
+        <button class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+            <span class="menu-icon"></span>
+            <span class="menu-icon"></span>
+            <span class="menu-icon"></span>
+        </button>
+        
+        <nav class="nav-menu" id="navMenu">
+            <div class="nav-section">
+                <div class="nav-section-title">总览</div>
+                <a class="nav-item active" onclick="showContent('home')">🏠 首页</a>
+                <a class="nav-item" onclick="showContent('overview')">📊 S1成果总览</a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">实人风控</div>
+                <a class="nav-item" onclick="showContent('liveness-blueprint')">🎯 实人终局蓝图</a>
+                <a class="nav-item" onclick="showContent('liveness-work')">💪 实人S1工作与成果</a>
+                <a class="nav-item" onclick="showContent('liveness-model')">🧠 实人大模型研发</a>
+                <a class="nav-item" onclick="showContent('case-demo')">🔬 Case研判演示</a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">实证风控</div>
+                <a class="nav-item" onclick="showContent('document-blueprint')">📋 实证终局蓝图</a>
+                <a class="nav-item" onclick="showContent('document-work')">🔄 实证S1工作与成果</a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">S2规划</div>
+                <a class="nav-item" onclick="showContent('s2-planning')">🚀 S2整体规划</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="content-wrapper">
+        <!-- 首页 -->
+        <div id="home" class="content-section active">
+            <div class="home-section">
+                <h1 class="home-title">S1 Review</h1>
+                <p class="home-subtitle">构建AI驱动的下一代风控体系</p>
+                <p style="font-size: 1.1rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+                    通过大小模型协同的技术体系升级，为实人与实证两大"硅基员工"奠定技术基石<br>
+                    实现防控能力明显提升，资源利用率显著优化，
+                </p>
+                
+                <div class="home-cards">
+                    <div class="home-card" onclick="showContent('liveness-blueprint')">
+                        <div class="home-card-icon">🤖</div>
+                        <div class="home-card-title">实人风控</div>
+                        <div class="home-card-desc">
+                            构建智能攻防研判专家，实现从模型驱动到智能体驱动的跨越
+                        </div>
+                    </div>
+                    
+                    <div class="home-card" onclick="showContent('document-blueprint')">
+                        <div class="home-card-icon">📄</div>
+                        <div class="home-card-title">实证风控</div>
+                        <div class="home-card-desc">
+                            打造全能文档审核专家，实现多工具协同的智能化处理
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="home-card" onclick="showContent('s2-planning')">
+                        <div class="home-card-icon">🚀</div>
+                        <div class="home-card-title">S2规划</div>
+                        <div class="home-card-desc">
+                            激活与进化，推动整个风控体系向更高层次发展
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- S1成果总览 -->
+        <div id="overview" class="content-section">
+            <iframe src="s1_review_report.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- 实人终局蓝图 -->
+        <div id="liveness-blueprint" class="content-section">
+            <iframe src="liveness_blueprint.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- 实人S1工作与成果 -->
+        <div id="liveness-work" class="content-section">
+            <iframe src="liveness_models_achievements.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- 实人大模型研发 -->
+        <div id="liveness-model" class="content-section">
+            <iframe src="liveness_largemodel_development.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- Case研判演示 -->
+        <div id="case-demo" class="content-section">
+            <iframe src="MLLMCase.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- 实证终局蓝图 -->
+        <div id="document-blueprint" class="content-section">
+            <iframe src="document_verification_blueprint.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- 实证S1工作与成果 -->
+        <div id="document-work" class="content-section">
+            <iframe src="document_verification_achievements.html" class="content-frame"></iframe>
+        </div>
+
+        <!-- S2规划 -->
+        <div id="s2-planning" class="content-section">
+            <iframe src="s2_liveness_planning.html" class="content-frame"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // 切换菜单显示/隐藏
+        function toggleMenu() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        }
+
+        // 显示对应内容
+        function showContent(sectionId) {
+            // 隐藏所有内容
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 显示选中的内容
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // 更新导航菜单状态
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 设置当前选中的导航项
+            event.target.classList.add('active');
+            
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            menuToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+            
+            // 滚动到顶部
+            window.scrollTo(0, 0);
+        }
+
+        // 点击菜单外部关闭菜单
+        document.addEventListener('click', function(event) {
+            const navContainer = document.querySelector('.nav-container');
+            const menuToggle = document.getElementById('menuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (!navContainer.contains(event.target)) {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // 自动调整iframe高度
+        function adjustIframeHeight() {
+            const iframes = document.querySelectorAll('.content-frame');
+            iframes.forEach(iframe => {
+                iframe.onload = function() {
+                    try {
+                        // 尝试获取iframe内容高度
+                        const height = iframe.contentWindow.document.body.scrollHeight;
+                        iframe.style.height = height + 'px';
+                    } catch(e) {
+                        // 如果跨域，使用默认高度
+                        iframe.style.minHeight = '100vh';
+                    }
+                };
+            });
+        }
+
+        // 页面加载完成后调整iframe高度
+        window.addEventListener('load', adjustIframeHeight);
+    </script>
+</body>
+</html>

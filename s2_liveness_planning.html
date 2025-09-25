@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S2实人风控规划 - 激活与进化</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 标题部分 */
+        .header-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* 核心目标卡片 */
+        .objective-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .objective-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #667eea, #764ba2) 1;
+        }
+
+        .objective-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .highlight-text {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        /* 主要工作板块 */
+        .work-section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px 35px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .section-title-wrapper {
+            flex: 1;
+        }
+
+        .section-number {
+            font-size: 0.9rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .section-content {
+            background: linear-gradient(to bottom, #f8f9fa, white);
+            border-radius: 0 0 20px 20px;
+            padding: 30px 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        /* 工作项卡片 */
+        .work-items {
+            display: grid;
+            gap: 25px;
+        }
+
+        .work-item {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 5px solid;
+            border-image: linear-gradient(135deg, #667eea, #764ba2) 1;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .work-item:hover::before {
+            left: 100%;
+        }
+
+        .work-item:hover {
+            transform: translateX(5px);
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .work-item-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .work-item-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .work-item-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+
+        .work-detail {
+            margin: 15px 0;
+            padding-left: 50px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-right: 8px;
+        }
+
+        .detail-content {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        /* 创新标签 */
+        .innovation-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 10px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* 优势列表 */
+        .advantage-list {
+            background: #f0f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            margin-left: 50px;
+        }
+
+        .advantage-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .advantage-icon {
+            color: #10b981;
+            margin-right: 10px;
+            margin-top: 2px;
+        }
+
+        .advantage-text {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* 技术路径卡片 */
+        .tech-path {
+            background: linear-gradient(135deg, #f3e7fc, #e9d5ff);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0 15px 50px;
+        }
+
+        .tech-path-title {
+            font-weight: 600;
+            color: #7c3aed;
+            margin-bottom: 10px;
+        }
+
+        .tech-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .tech-option {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .tech-option-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .tech-option-value {
+            font-weight: 600;
+            color: #7c3aed;
+        }
+
+        /* 核心价值强调 */
+        .core-value-box {
+            background: linear-gradient(135deg, #d4f4dd, #bbf7d0);
+            border-left: 5px solid #10b981;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0 20px 50px;
+        }
+
+        .core-value-title {
+            font-weight: 600;
+            color: #059669;
+            margin-bottom: 10px;
+        }
+
+        .core-value-content {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        /* 进化路径图 */
+        .evolution-path {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .evolution-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        .evolution-stages {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .evolution-stage {
+            flex: 1;
+            min-width: 150px;
+            margin: 10px;
+        }
+
+        .stage-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .stage-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .stage-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .evolution-arrow {
+            color: #667eea;
+            font-size: 2rem;
+            margin: 0 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .section-icon {
+                margin: 0 auto 15px;
+            }
+            
+            .work-detail,
+            .advantage-list,
+            .tech-path,
+            .core-value-box {
+                padding-left: 0;
+                margin-left: 0;
+            }
+            
+            .evolution-stages {
+                flex-direction: column;
+            }
+            
+            .evolution-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题部分 -->
+        <div class="header-section">
+            <h1 class="main-title">S2规划：激活与进化</h1>
+            <p class="subtitle">
+                激活"硅基员工"，构建立体化、智能化的攻防生态<br>
+                实人与实证双线并进，从"奠基"到"激活"，推动风控体系向更高层次进化
+            </p>
+        </div>
+
+        <!-- 核心目标 -->
+        <div class="objective-card">
+            <h2 class="objective-title">🎯 S2核心目标</h2>
+            <p class="objective-content">
+                S2的核心目标是将"硅基员工"从一个强大的分析工具，真正激活为一个能够
+                <span class="highlight-text">自我学习、并赋能整个防御体系</span>的智能核心。
+                我们将从两大方向推进工作：构筑纵深防御体系，激活智能进化飞轮。
+            </p>
+        </div>
+
+        <!-- 第一板块：防线能力跃迁 -->
+        <div class="work-section">
+            <div class="section-header">
+                <div class="section-icon">🛡️</div>
+                <div class="section-title-wrapper">
+                    <div class="section-number">Direction One</div>
+                    <div class="section-title">防线能力跃迁：构筑"端-云-图"一体化的纵深防御体系</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <p style="color: #555; margin-bottom: 25px; line-height: 1.7;">
+                    我们将补全当前线上小模型体系的能力短板，并通过知识蒸馏打通"大脑"与"四肢"的联动，
+                    实现从"点"到"面"再到"体"的防御升级。
+                </p>
+                
+                <div class="work-items">
+                    <!-- 工作项1 -->
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">1</div>
+                            <div class="work-item-title">上线多模态实时图模型，提升团伙作弊识别能力</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">工作内容：</span>
+                            <span class="detail-content">完成S1搁置的实时图模型的研发与上线。</span>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="innovation-badge">🚀 核心创新</span>
+                            <div class="detail-content" style="margin-top: 10px;">
+                                我们将突破传统实时图仅使用身份证、IP等"硬介质"的局限，
+                                <strong>创新性地将图像特征作为"软介质"引入图网络中</strong>。
+                                这使得我们可以基于人脸的微小相似性来发现潜在的黑产团伙，
+                                极大提升了关联网络的构建维度和识别精度。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工作项2 -->
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">2</div>
+                            <div class="work-item-title">补全端侧活体能力，落地"白平衡"检测方案</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">背景：</span>
+                            <span class="detail-content">
+                                当前端侧能力是空白；传统的"炫彩活体"方案不仅受环境光影响严重，
+                                且市面上已出现成熟的破解工具（如"五色盘"），收益很低。
+                            </span>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">工作内容：</span>
+                            <span class="detail-content">研发并上线基于"白平衡"调整的端云协同新方案。</span>
+                        </div>
+                        
+                        <div class="advantage-list">
+                            <div style="font-weight: 600; color: #1e40af; margin-bottom: 10px;">方案优势</div>
+                            <div class="advantage-item">
+                                <span class="advantage-icon">✓</span>
+                                <span class="advantage-text">
+                                    通过云端下发指令动态调整端侧相机的白平衡参数，并校验图像变化
+                                </span>
+                            </div>
+                            <div class="advantage-item">
+                                <span class="advantage-icon">✓</span>
+                                <span class="advantage-text">
+                                    <strong>不受环境光影响</strong>，适应各种光照条件
+                                </span>
+                            </div>
+                            <div class="advantage-item">
+                                <span class="advantage-icon">✓</span>
+                                <span class="advantage-text">
+                                    指令灵活多变，<strong>破解难度远高于固定模式的炫彩活体</strong>
+                                </span>
+                            </div>
+                            <div class="advantage-item">
+                                <span class="advantage-icon">✓</span>
+                                <span class="advantage-text">
+                                    能有效补全我们在端侧对抗上的能力空白
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工作项3 -->
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">3</div>
+                            <div class="work-item-title">启动知识蒸馏，激活"大脑-四肢"的智能联动</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">工作内容：</span>
+                            <span class="detail-content">
+                                正式启动大模型向线上小模型的知识蒸馏工作，将"大脑"的智慧传递给"四肢"。
+                            </span>
+                        </div>
+                        
+                        <div class="tech-path">
+                            <div class="tech-path-title">🔬 技术路径</div>
+                            <p style="color: #555; margin-bottom: 15px;">
+                                我们将探索多种蒸馏方式以求最优效果：
+                            </p>
+                            <div class="tech-options">
+                                <div class="tech-option">
+                                    <div class="tech-option-label">纯图像模型</div>
+                                    <div class="tech-option-value">数据蒸馏</div>
+                                </div>
+                                <div class="tech-option">
+                                    <div class="tech-option-label">多模态综合决策模型</div>
+                                    <div class="tech-option-value">特征蒸馏</div>
+                                </div>
+                            </div>
+                            <p style="color: #555; margin-top: 15px; font-size: 0.95rem;">
+                                确保大模型复杂的推理能力能够被线上模型有效吸收
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二板块：大脑智慧进化 -->
+        <div class="work-section">
+            <div class="section-header">
+                <div class="section-icon">🧠</div>
+                <div class="section-title-wrapper">
+                    <div class="section-number">Direction Two</div>
+                    <div class="section-title">大脑智慧进化：从"归因"到"知识"，激活智能飞轮</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <p style="color: #555; margin-bottom: 25px; line-height: 1.7;">
+                    当前大模型已具备出色的"判别"与"归因"能力，但S2需要让它完成从"能说会道"到"能思会学"的关键一跃。
+                </p>
+                
+                <div class="work-items">
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">1</div>
+                            <div class="work-item-title">训练知识抽取与结构化能力，打通知识飞轮</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">背景：</span>
+                            <span class="detail-content">
+                                当前模型能对Case进行详细的归因描述，但无法从中提炼出结构化的、可复用的知识。
+                            </span>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">工作内容：</span>
+                            <span class="detail-content">
+                                S2的核心算法任务，是在我们人工构建风控知识库的同时，
+                                <strong>训练大模型从自身的归因文本中自动抽取和总结攻击模式、关键特征、作弊手法等核心知识</strong>。
+                            </span>
+                        </div>
+                        
+                        <div class="core-value-box">
+                            <div class="core-value-title">🌟 核心价值</div>
+                            <div class="core-value-content">
+                                这将彻底打通"知识数据飞轮"中最关键的一环。智能体将不再仅仅是知识的"消费者"（通过RAG检索），
+                                更将成为知识的<strong>"生产者"</strong>，实现从"被动学习"到"主动沉淀"的进化，
+                                让整个风控体系的智慧实现飞轮式的自我增长。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三板块：实证风控 -->
+        <div class="work-section">
+            <div class="section-header">
+                <div class="section-icon">📄</div>
+                <div class="section-title-wrapper">
+                    <div class="section-number">Direction Three</div>
+                    <div class="section-title">实证风控：极致优化在线服务，启动离线智能审核</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <p style="color: #555; margin-bottom: 25px; line-height: 1.7;">
+                    S2实证风控的核心目标是<strong>"夯实当下"与"布局未来"并行</strong>。
+                    一方面极致优化已上线的服务，扫清全面替换的障碍；另一方面正式启动"硅基员工"的构建，为未来的自动化运营奠定基础。
+                </p>
+                
+                <div class="work-items">
+                    <!-- 工作项1 -->
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">1</div>
+                            <div class="work-item-title">在线OCR服务极致优化，扫清全面上线障碍</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">当前挑战：</span>
+                            <span class="detail-content">
+                                S1研发的新OCR服务虽然准确率大幅领先，但端到端RT（如身份证约500ms）仍高于旧服务（约300ms），
+                                导致在身份证等海量调用场景的全面上线较为谨慎。
+                            </span>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">S2核心工作：</span>
+                            <span class="detail-content">
+                                S2的首要任务是攻坚RT性能，在不牺牲准确率的前提下，为新模型的全面上线扫清障碍。
+                            </span>
+                        </div>
+                        
+                        <div class="tech-path">
+                            <div class="tech-path-title">⚡ 性能优化路径</div>
+                            <div style="margin-top: 15px;">
+                                <div style="margin-bottom: 15px;">
+                                    <strong style="color: #7c3aed;">模型轻量化探索：</strong>
+                                    <p style="color: #555; margin-top: 8px; line-height: 1.6;">
+                                        调研并实验更小尺寸的开源多模态大模型（如1.5B/2B级别），
+                                        探索在保持当前高精度的前提下，替换现有3B模型的可能性。
+                                    </p>
+                                </div>
+                                <div>
+                                    <strong style="color: #7c3aed;">算法创新加速：</strong>
+                                    <p style="color: #555; margin-top: 8px; line-height: 1.6;">
+                                        探索<strong>序列并行解码</strong>等前沿推理加速算法，
+                                        从算法层面优化模型的生成过程，以降低RT。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工作项2 -->
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">2</div>
+                            <div class="work-item-title">启动离线"文档审核"智能体构建，奠定自动化运营基础</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-content">
+                                这是我们迈向"实证硅基员工"的第一步。S2我们将从0到1构建离线Agent的基础框架，
+                                并确立其"绝对精准"的核心能力。
+                            </span>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">S2核心工作：</span>
+                        </div>
+                        
+                        <div class="advantage-list">
+                            <div class="advantage-item">
+                                <span class="advantage-icon">•</span>
+                                <span class="advantage-text">
+                                    <strong>Agent框架与工具集构建：</strong>
+                                    搭建支持工具调用的Agent基础框架，并根据任务优先级，
+                                    逐步构建和完善其工具箱（如高级图像分析、规则校验等工具）。
+                                </span>
+                            </div>
+                            <div class="advantage-item">
+                                <span class="advantage-icon">•</span>
+                                <span class="advantage-text">
+                                    <strong>离线识别能力攻坚：</strong>
+                                    S2的核心目标是，让离线大模型Agent在各类证件上的
+                                    <span style="color: #10b981; font-weight: 600;">OCR识别准确率无限逼近100%</span>。
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="core-value-box">
+                            <div class="core-value-title">💎 核心价值</div>
+                            <div class="core-value-content">
+                                一个"绝对精准"的离线Agent是未来实现自动化运营的基石。
+                                它将为后续的自动化疑难工单处理、线上模型误判归因等高级功能的实现提供最可靠的技术保障。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工作项3 -->
+                    <div class="work-item">
+                        <div class="work-item-header">
+                            <div class="work-item-number">3</div>
+                            <div class="work-item-title">敏捷迭代专项防伪能力，快速响应业务需求</div>
+                        </div>
+                        
+                        <div class="work-detail">
+                            <span class="detail-label">S2核心思路：</span>
+                            <span class="detail-content">
+                                在证件防伪领域，我们将继续采用"小模型、快迭代"的敏捷开发模式，紧密贴合业务需求。
+                            </span>
+                        </div>
+                        
+                        <div class="work-detail" style="background: #fff8e1; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                            <span class="detail-label" style="color: #f57c00;">工作模式：</span>
+                            <div class="detail-content" style="margin-top: 10px;">
+                                该部分工作将由<strong>业务紧急程度驱动</strong>。
+                                当业务出现新的伪造风险时，我们将快速响应并迭代专项小模型进行防御。
+                                若无紧急需求，则将资源优先投入到上述两项更具战略意义的工作中。
+                                <p style="margin-top: 10px; color: #666;">
+                                    当前阶段，防伪能力暂不纳入大模型Agent的范畴，以保证业务响应的灵活性和效率。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 进化路径图 -->
+        <div class="evolution-path">
+            <h3 class="evolution-title">🚀 S1→S2 进化路径</h3>
+            <div class="evolution-stages">
+                <div class="evolution-stage">
+                    <div class="stage-icon">🏗️</div>
+                    <div class="stage-label">S1 奠基</div>
+                    <div class="stage-desc">构建基础能力<br>大小模型并行</div>
+                </div>
+                
+                <div class="evolution-arrow">→</div>
+                
+                <div class="evolution-stage">
+                    <div class="stage-icon">⚡</div>
+                    <div class="stage-label">S2 激活</div>
+                    <div class="stage-desc">知识蒸馏<br>智能联动</div>
+                </div>
+                
+                <div class="evolution-arrow">→</div>
+                
+                <div class="evolution-stage">
+                    <div class="stage-icon">🔄</div>
+                    <div class="stage-label">S2 进化</div>
+                    <div class="stage-desc">知识生产<br>自我学习</div>
+                </div>
+                
+                <div class="evolution-arrow">→</div>
+                
+                <div class="evolution-stage">
+                    <div class="stage-icon">🎯</div>
+                    <div class="stage-label">终极目标</div>
+                    <div class="stage-desc">硅基员工<br>自主运营</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

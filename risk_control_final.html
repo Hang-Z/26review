@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>业务数据评测 - 人审 vs 离线大模型对比</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            padding: 30px 0 20px 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header .subtitle {
+            margin-top: 10px;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .total-samples {
+            text-align: center;
+            color: white;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .total-samples .label {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+        .total-samples .value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .total-samples .breakdown {
+            margin-top: 8px;
+            font-size: 1em;
+            opacity: 0.85;
+        }
+        .metrics-container {
+            margin: 30px 0;
+        }
+        .metrics-group {
+            margin-bottom: 25px;
+        }
+        .group-title {
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        .metric-card.model {
+            border-top: 4px solid #e67e22;
+        }
+        .metric-card.human {
+            border-top: 4px solid #9b59b6;
+        }
+        .metric-label {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .metric-value {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .metric-detail {
+            font-size: 0.9em;
+            color: #888;
+        }
+        .chart-section {
+            background: white;
+            border-radius: 12px;
+            margin: 30px 0;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            font-size: 1.6em;
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+            text-align: center;
+        }
+        .chart-subtitle {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: normal;
+            display: block;
+            margin-top: 8px;
+        }
+        @media (max-width: 768px) {
+            .metrics-row {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .total-samples .value {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 风控数据分析报告</h1>
+            <div class="subtitle">人工审核 vs 离线大模型 性能对比</div>
+        </div>
+
+        <div class="total-samples">
+            <div class="label">📊 数据集规模</div>
+            <div class="value">19.5万条</div>
+            <div class="breakdown">真实黑样本 3.15万（16.2%） | 真实白样本 16.35万（83.8%）</div>
+        </div>
+
+        <div class="metrics-container">
+            <!-- 模型指标 -->
+            <div class="metrics-group">
+                <div class="group-title">🤖 离线大模型准确率</div>
+                <div class="metrics-row">
+                    <div class="metric-card model">
+                        <div class="metric-label">误拦率（FPR）</div>
+                        <div class="metric-value">0.12%</div>
+                        <div class="metric-detail">误拦196个白样本</div>
+                    </div>
+                    <div class="metric-card model">
+                        <div class="metric-label">召回率（TPR）</div>
+                        <div class="metric-value">90.5%</div>
+                        <div class="metric-detail">识别28,551个黑样本</div>
+                    </div>
+                    <div class="metric-card model">
+                        <div class="metric-label">准确率</div>
+                        <div class="metric-value">98.4%</div>
+                        <div class="metric-detail">191,806个正确判断</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 人审指标 -->
+            <div class="metrics-group">
+                <div class="group-title">👥 人工审核准确率</div>
+                <div class="metrics-row">
+                    <div class="metric-card human">
+                        <div class="metric-label">误拦率（FPR）</div>
+                        <div class="metric-value">0.92%</div>
+                        <div class="metric-detail">误拦1,522个白样本</div>
+                    </div>
+                    <div class="metric-card human">
+                        <div class="metric-label">召回率（TPR）</div>
+                        <div class="metric-value">49.1%</div>
+                        <div class="metric-detail">识别15,478个黑样本</div>
+                    </div>
+                    <div class="metric-card human">
+                        <div class="metric-label">准确率</div>
+                        <div class="metric-value">91.0%</div>
+                        <div class="metric-detail">177,451个正确判断</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="chart-title">
+                📊 数据流向分析图
+                <span class="chart-subtitle">流线宽度准确反映数据比例，清晰对比召回率差异</span>
+            </h2>
+            <div id="sankey-chart" style="height: 700px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 数据准备
+        const total_samples = 195000;
+        const actual_black = 31549;
+        const actual_white = 163451;
+
+        const human_tp = 15478;
+        const human_fp = 1522;
+        const human_fn = 16049;
+        const human_tn = 161951;
+
+        const model_tp = 28551;
+        const model_fp = 196;
+        const model_fn = 2998;
+        const model_tn = 163255;
+
+        // 绘制改进的桑基图 - 简化结构
+        function drawSankey() {
+            const data = [{
+                type: "sankey",
+                orientation: "h",
+                node: {
+                    pad: 30,
+                    thickness: 25,
+                    line: {
+                        color: "#333",
+                        width: 1
+                    },
+                    label: [
+                        // 左侧：原始数据
+                        `总样本\n195.0K`,              // 0
+                        `真实黑样本\n31.5K\n(16.2%)`,   // 1
+                        `真实白样本\n163.5K\n(83.8%)`,  // 2
+                        
+                        // 中间：人审判断
+                        `👥 人审判黑\n17.0K`,           // 3
+                        `👥 人审判白\n178.0K`,          // 4
+                        
+                        // 中间：模型判断
+                        `🤖 模型判黑\n28.7K`,           // 5
+                        `🤖 模型判白\n166.3K`,          // 6
+                        
+                        // 右侧：最终结果
+                        `✓ 正确识别黑`,                // 7
+                        `✗ 漏判黑`,                    // 8
+                        `✗ 误拦白`,                    // 9
+                        `✓ 正确放过白`                 // 10
+                    ],
+                    color: [
+                        "#95a5a6",  // 总样本
+                        "#e74c3c",  // 真实黑
+                        "#3498db",  // 真实白
+                        "#9b59b6",  // 人审判黑
+                        "#8e44ad",  // 人审判白
+                        "#e67e22",  // 模型判黑
+                        "#d35400",  // 模型判白
+                        "#27ae60",  // 正确识别
+                        "#c0392b",  // 漏判
+                        "#e74c3c",  // 误拦
+                        "#27ae60"   // 正确放过
+                    ]
+                },
+                link: {
+                    source: [
+                        // 总样本分流
+                        0, 0,
+                        
+                        // 黑样本到人审
+                        1, 1,
+                        // 白样本到人审
+                        2, 2,
+                        
+                        // 黑样本到模型
+                        1, 1,
+                        // 白样本到模型
+                        2, 2,
+                        
+                        // 人审判断到结果
+                        3, 3,   // 人审判黑
+                        4, 4,   // 人审判白
+                        
+                        // 模型判断到结果
+                        5, 5,   // 模型判黑
+                        6, 6    // 模型判白
+                    ],
+                    target: [
+                        // 总样本分流
+                        1, 2,
+                        
+                        // 黑样本到人审
+                        3, 4,
+                        // 白样本到人审
+                        3, 4,
+                        
+                        // 黑样本到模型
+                        5, 6,
+                        // 白样本到模型
+                        5, 6,
+                        
+                        // 人审判断到结果
+                        7, 9,   // 判黑->正确/误拦
+                        10, 8,  // 判白->正确/漏判
+                        
+                        // 模型判断到结果
+                        7, 9,   // 判黑->正确/误拦
+                        10, 8   // 判白->正确/漏判
+                    ],
+                    value: [
+                        // 总样本分流
+                        actual_black, actual_white,
+                        
+                        // 人审
+                        human_tp, human_fn,  // 黑样本
+                        human_fp, human_tn,  // 白样本
+                        
+                        // 模型
+                        model_tp, model_fn,  // 黑样本
+                        model_fp, model_tn,  // 白样本
+                        
+                        // 人审结果
+                        human_tp, human_fp,  // 判黑
+                        human_tn, human_fn,  // 判白
+                        
+                        // 模型结果
+                        model_tp, model_fp,  // 判黑
+                        model_tn, model_fn   // 判白
+                    ],
+                    color: [
+                        // 根据流向设置颜色
+                        "rgba(231, 76, 60, 0.4)",    // 总->黑
+                        "rgba(52, 152, 219, 0.4)",   // 总->白
+                        
+                        // 人审
+                        "rgba(155, 89, 182, 0.6)",   // 黑->人审判黑（召回）
+                        "rgba(155, 89, 182, 0.3)",   // 黑->人审判白（漏判）
+                        "rgba(155, 89, 182, 0.3)",   // 白->人审判黑（误拦）
+                        "rgba(155, 89, 182, 0.6)",   // 白->人审判白（正确）
+                        
+                        // 模型
+                        "rgba(230, 126, 34, 0.7)",   // 黑->模型判黑（召回）
+                        "rgba(230, 126, 34, 0.3)",   // 黑->模型判白（漏判）
+                        "rgba(230, 126, 34, 0.3)",   // 白->模型判黑（误拦）
+                        "rgba(230, 126, 34, 0.7)",   // 白->模型判白（正确）
+                        
+                        // 结果
+                        "rgba(39, 174, 96, 0.6)",    // 人审正确识别
+                        "rgba(231, 76, 60, 0.6)",    // 人审误拦
+                        "rgba(39, 174, 96, 0.6)",    // 人审正确放过
+                        "rgba(231, 76, 60, 0.6)",    // 人审漏判
+                        
+                        "rgba(39, 174, 96, 0.6)",    // 模型正确识别
+                        "rgba(231, 76, 60, 0.6)",    // 模型误拦
+                        "rgba(39, 174, 96, 0.6)",    // 模型正确放过
+                        "rgba(231, 76, 60, 0.6)"     // 模型漏判
+                    ],
+                    label: [
+                        "", "",
+                        
+                        // 人审
+                        `人审召回 ${(human_tp/actual_black*100).toFixed(1)}%`,
+                        `人审漏判 ${(human_fn/actual_black*100).toFixed(1)}%`,
+                        `人审误拦 ${(human_fp/actual_white*100).toFixed(2)}%`,
+                        `正确放过`,
+                        
+                        // 模型
+                        `模型召回 ${(model_tp/actual_black*100).toFixed(1)}%`,
+                        `模型漏判 ${(model_fn/actual_black*100).toFixed(1)}%`,
+                        `模型误拦 ${(model_fp/actual_white*100).toFixed(2)}%`,
+                        `正确放过`,
+                        
+                        // 结果
+                        `${(human_tp/1000).toFixed(1)}K`,
+                        `${(human_fp/1000).toFixed(1)}K`,
+                        `${(human_tn/1000).toFixed(1)}K`,
+                        `${(human_fn/1000).toFixed(1)}K`,
+                        
+                        `${(model_tp/1000).toFixed(1)}K`,
+                        `${model_fp}个`,
+                        `${(model_tn/1000).toFixed(1)}K`,
+                        `${(model_fn/1000).toFixed(1)}K`
+                    ],
+                    hovertemplate: '%{label}<br>数量: %{value:,.0f}<extra></extra>'
+                }
+            }];
+
+            const layout = {
+                font: {
+                    size: 13,
+                    family: 'Microsoft YaHei, Segoe UI, sans-serif'
+                },
+                margin: {
+                    l: 20,
+                    r: 150,
+                    t: 30,
+                    b: 30
+                },
+                paper_bgcolor: 'white',
+                plot_bgcolor: 'white'
+            };
+
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot('sankey-chart', data, layout, config);
+        }
+
+        // 页面加载完成后绘制图表
+        document.addEventListener('DOMContentLoaded', function() {
+            drawSankey();
+        });
+
+        // 窗口大小改变时重绘
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('sankey-chart');
+        });
+    </script>
+</body>
+</html>

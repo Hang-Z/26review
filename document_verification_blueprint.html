@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实证风控终局蓝图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 标题部分 */
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* 架构图部分 */
+        .architecture-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .architecture-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 切换按钮 */
+        .toggle-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .toggle-button {
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(66, 165, 245, 0.3);
+        }
+
+        .toggle-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(66, 165, 245, 0.4);
+        }
+
+        .toggle-button:active {
+            transform: translateY(0);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+        }
+
+        /* 蓝图概述部分 - 调整位置到能力卡片之前 */
+        .blueprint-overview {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #42a5f5, #1e88e5);
+        }
+
+        .overview-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .overview-paragraph {
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+        }
+
+        .architecture-list {
+            margin: 30px 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .architecture-item {
+            margin-bottom: 20px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .architecture-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: #42a5f5;
+            border-radius: 50%;
+        }
+
+        .architecture-item strong {
+            color: #1e88e5;
+            font-size: 1.1rem;
+        }
+
+        .sub-items {
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .sub-item {
+            margin: 8px 0;
+            color: #555;
+            font-size: 0.95rem;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .sub-item::before {
+            content: '•';
+            position: absolute;
+            left: 5px;
+            color: #42a5f5;
+        }
+
+        /* 能力卡片部分 */
+        .capabilities-section {
+            margin-bottom: 40px;
+        }
+
+        .capabilities-intro {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .capability-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #42a5f5, #1e88e5);
+        }
+
+        .capability-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .capability-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .capability-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .capability-description {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-section,
+            .blueprint-overview {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题部分 -->
+        <div class="header-section">
+            <h1 class="main-title">实证风控终局蓝图</h1>
+            <p class="subtitle">构建多工具协同的"文档审核"智能体</p>
+        </div>
+
+        <!-- 架构图部分 -->
+        <div class="architecture-section">
+            <div class="image-container">
+                <img id="architectureImage" src="实证硅基.png" alt="实证风控架构图" class="architecture-image">
+            </div>
+            <div class="toggle-container">
+                <button class="toggle-button" onclick="toggleImage()">
+                    切换查看进度
+                    <span id="statusIndicator" class="status-indicator">全景图</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 蓝图概述部分 -->
+        <div class="blueprint-overview">
+            <h2 class="section-title">蓝图概述</h2>
+            
+            <div class="overview-content">
+                <p class="overview-paragraph">
+                    在实证风控领域，我们面临的挑战不仅是识别准确率，更是应对层出不穷的伪造手段和海量的运营审核工单。为此，我们设计的终局蓝图是一个"多工具协同"的文档审核智能体。它将取代传统割裂的"OCR模型+防伪模型"模式，成为统一的、智能化的业务处理中枢。
+                </p>
+
+                <p class="overview-paragraph">
+                    如上图所示，该智能体的核心架构由三部分构成：
+                </p>
+
+                <div class="architecture-list">
+                    <div class="architecture-item">
+                        <strong>1. 决策大脑 (Agent Core):</strong> 图中央的大模型是智能体的"大脑"，负责任务的理解、拆解，并智能地规划和调用工具来完成复杂任务。
+                    </div>
+
+                    <div class="architecture-item">
+                        <strong>2. 专业工具箱 (Specialized Toolbox):</strong> 环绕大脑的是一个功能强大的工具箱。这些工具被归纳为两大类：
+                        <div class="sub-items">
+                            <div class="sub-item">
+                                <strong>信息提取工具集 (左侧OCR):</strong> 负责从各类文档中精准、快速地提取结构化信息。
+                            </div>
+                            <div class="sub-item">
+                                <strong>防伪研判工具集 (右侧防伪):</strong> 负责从像素、逻辑、版面等多个维度对文档的真实性进行深度校验。
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="architecture-item">
+                        <strong>3. 知识与数据闭环:</strong> 智能体通过处理实际业务，将分析结论和攻击特征沉淀为知识，形成持续学习和自我进化的能力闭环。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心能力部分 -->
+        <div class="capabilities-section">
+            <h2 class="section-title">"硅基员工"核心能力项</h2>
+            <p class="capabilities-intro">
+                该智能体旨在将实证风控的运营模式从"人力密集型"转变为"智能驱动型"，其核心能力包括：
+            </p>
+            
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="capability-icon">📋</div>
+                    <h3 class="capability-title">自动化疑难工单研判</h3>
+                    <p class="capability-description">
+                        针对线上 OCR 识别失败的工单，能以接近100%的准确率进行复判，并自动归因（是图像质量问题、新版式问题，还是线上小模型能力不足），极大减轻人工审核压力。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">🔄</div>
+                    <h3 class="capability-title">智能化模型迭代与蒸馏</h3>
+                    <p class="capability-description">
+                        将自身强大的文档理解与防伪分析能力，通过知识蒸馏的方式，持续、自动化地优化和迭代线上的小尺寸 OCR 模型及防伪模型，提升线上服务的"平均智商"。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">🔍</div>
+                    <h3 class="capability-title">未知攻击手法分析与溯源</h3>
+                    <p class="capability-description">
+                        对新型或高伪装性的证件伪造手法（例如，特定软件生成的PS痕迹、篡改打印后再翻拍等复合攻击）进行深度分析，溯源其技术特征，为主动防御提供决策依据。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">⚖️</div>
+                    <h3 class="capability-title">跨信息维度一致性校验</h3>
+                    <p class="capability-description">
+                        突破单一模型的局限，像人类专家一样进行逻辑链推理。例如，自动比对证件正反面信息、校验姓名与姓名拼音的一致性、核对身份证号码的内在逻辑等，发现"单点正确，全局矛盾"的伪造方式。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">🛡️</div>
+                    <h3 class="capability-title">动态防控策略生成</h3>
+                    <p class="capability-description">
+                        在发现新的攻击手法或风险模式后，不仅能进行分析，还能主动建议防控策略，例如"建议上线针对XX版式的新校验规则"或"建议调整XX场景的像素分析模型阈值"。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isProgressView = false;
+
+        function toggleImage() {
+            const img = document.getElementById('architectureImage');
+            const indicator = document.getElementById('statusIndicator');
+            
+            isProgressView = !isProgressView;
+            
+            if (isProgressView) {
+                img.src = '实证硅基进度.png';
+                indicator.textContent = '进度图';
+            } else {
+                img.src = '实证硅基.png';
+                indicator.textContent = '全景图';
+            }
+        }
+    </script>
+</body>
+</html>

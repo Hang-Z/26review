@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实人风控终局蓝图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 标题部分 */
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-title {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* 架构图部分 */
+        .architecture-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .architecture-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 切换按钮 */
+        .toggle-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .toggle-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .toggle-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .toggle-button:active {
+            transform: translateY(0);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+        }
+
+        /* 能力卡片部分 */
+        .capabilities-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .capabilities-intro {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .capability-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capability-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .capability-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .capability-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .capability-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .capability-description {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 蓝图概述部分 */
+        .blueprint-overview {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .overview-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: #444;
+        }
+
+        .overview-paragraph {
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+        }
+
+        .architecture-list {
+            margin: 30px 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .architecture-item {
+            margin-bottom: 20px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .architecture-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+        }
+
+        .architecture-item strong {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .capabilities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-section,
+            .blueprint-overview {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题部分 -->
+        <div class="header-section">
+            <h1 class="main-title">实人风控终局蓝图</h1>
+            <p class="subtitle">构建自主决策的"硅基员工"智能体</p>
+        </div>
+
+        <!-- 架构图部分 -->
+        <div class="architecture-section">
+            <div class="image-container">
+                <img id="architectureImage" src="实人硅基.png" alt="实人风控架构图" class="architecture-image">
+            </div>
+            <div class="toggle-container">
+                <button class="toggle-button" onclick="toggleImage()">
+                    切换查看进度
+                    <span id="statusIndicator" class="status-indicator">全景图</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 核心能力部分 -->
+        <div class="capabilities-section">
+            <h2 class="section-title">"硅基员工"核心能力项</h2>
+            <p class="capabilities-intro">
+                这个智能体被设计用来逐步接管当前耗时耗力的人工运营任务，其核心能力包括：
+            </p>
+            
+            <div class="capabilities-grid">
+                <div class="capability-card">
+                    <div class="capability-icon">🔬</div>
+                    <h3 class="capability-title">自主Case研判与归因</h3>
+                    <p class="capability-description">
+                        对高风险、高伪装性的疑难样本进行深度分析，自动生成图文并茂的归因报告，取代当前大量的人工研判工作。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">⚡</div>
+                    <h3 class="capability-title">智能化策略生成与推荐</h3>
+                    <p class="capability-description">
+                        基于对攻击趋势的分析，自动推荐或生成可执行的风控策略（如调整模型阈值、更新规则），将攻防对抗的响应时效从"天"级缩短至"分钟"级。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">📡</div>
+                    <h3 class="capability-title">攻击情报分析与预警</h3>
+                    <p class="capability-description">
+                        主动从海量攻击样本中进行聚类分析与模式挖掘，发现人工难以察觉的新型攻击手法与团伙特征，提前进行预警。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">📚</div>
+                    <h3 class="capability-title">自动化知识库构建与维护</h3>
+                    <p class="capability-description">
+                        将每一次的研判结论与攻击情报自动沉淀为结构化知识，构建风控知识库，实现从"数据"到"知识"再到"智慧"的飞轮式转化。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">🗄️</div>
+                    <h3 class="capability-title">自动化黑库更新</h3>
+                    <p class="capability-description">
+                        实时监控攻击样本，自动识别高价值黑样本并归档入库，持续完善黑样本数据库，为模型训练和策略制定提供高质量数据支撑。
+                    </p>
+                </div>
+
+                <div class="capability-card">
+                    <div class="capability-icon">🔄</div>
+                    <h3 class="capability-title">模型与数据资产管理</h3>
+                    <p class="capability-description">
+                        通过模型蒸馏持续赋能线上小模型，并自动化维护与扩充黑样本库，实现算法与数据资产的自我迭代与增值。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 蓝图概述部分 -->
+        <div class="blueprint-overview">
+            <h2 class="section-title">蓝图概述</h2>
+            
+            <div class="overview-content">
+                <p class="overview-paragraph">
+                    为应对日益复杂化、AIGC化的攻击手段，我们将风控体系从"模型驱动"升级为"智能体驱动"。上图展示了我们为实人风控设计的终局蓝图——一个以多模态大模型为核心，具备自主决策能力的"硅基员工"智能体。
+                </p>
+
+                <p class="overview-paragraph">
+                    该智能体的核心架构包含四大关键部分：
+                </p>
+
+                <div class="architecture-list">
+                    <div class="architecture-item">
+                        <strong>1. 决策大脑 (Agent Core):</strong> 即图中央的"实人多模态大模型"，是整个体系的认知与决策核心，负责思考、分析与规划。
+                    </div>
+
+                    <div class="architecture-item">
+                        <strong>2. 感知与执行矩阵 (Real-time System):</strong> 即左侧的"实时小模型体系"，是智能体的"五官"和"四肢"，负责7x24小时感知风险、执行一线防控指令。
+                    </div>
+
+                    <div class="architecture-item">
+                        <strong>3. 多功能工具箱 (Toolbox):</strong> 大脑通过调用代码解释器、轨迹查询等多样化工具，突破了单一模型的限制，具备了与复杂数据环境交互的能力。
+                    </div>
+
+                    <div class="architecture-item">
+                        <strong>4. 双飞轮进化系统 (Dual Flywheels):</strong> 通过"知识数据飞轮"和"黑库数据飞轮"，智能体能够从与人、运营、数据的交互中持续学习，实现能力的自我进化与迭代。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isProgressView = false;
+
+        function toggleImage() {
+            const img = document.getElementById('architectureImage');
+            const indicator = document.getElementById('statusIndicator');
+            
+            isProgressView = !isProgressView;
+            
+            if (isProgressView) {
+                img.src = '实人硅基进度.png';
+                indicator.textContent = '进度图';
+            } else {
+                img.src = '实人硅基.png';
+                indicator.textContent = '全景图';
+            }
+        }
+    </script>
+</body>
+</html>
